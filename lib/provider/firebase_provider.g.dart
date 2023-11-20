@@ -22,7 +22,7 @@ final firebaseFirestoreProvider =
 );
 
 typedef FirebaseFirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
-String _$userStreamHash() => r'6e4aa462d214a69369eaac6e272ed45fad78fa04';
+String _$userStreamHash() => r'ea7b90799e9c9341000e33d8224584609acda9a7';
 
 /// See also [userStream].
 @ProviderFor(userStream)
@@ -36,7 +36,7 @@ final userStreamProvider = AutoDisposeStreamProvider<List<User>>.internal(
 );
 
 typedef UserStreamRef = AutoDisposeStreamProviderRef<List<User>>;
-String _$taskStreamHash() => r'4c2720c27a79c9d3bc400f9de924780d7a79df08';
+String _$taskStreamHash() => r'6d486ab7c4af3251137920aea59ed524e13b267d';
 
 /// See also [taskStream].
 @ProviderFor(taskStream)

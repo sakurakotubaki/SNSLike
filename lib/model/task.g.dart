@@ -7,6 +7,9 @@ part of 'task.dart';
 // **************************************************************************
 
 _$TaskImpl _$$TaskImplFromJson(Map<String, dynamic> json) => _$TaskImpl(
+      createdAt:
+          const TimestampConverter().fromJson(json['createdAt'] as Timestamp?),
+      id: json['id'] as String? ?? '',
       task: json['task'] as String? ?? '',
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
@@ -19,6 +22,8 @@ _$TaskImpl _$$TaskImplFromJson(Map<String, dynamic> json) => _$TaskImpl(
 
 Map<String, dynamic> _$$TaskImplToJson(_$TaskImpl instance) =>
     <String, dynamic>{
+      'createdAt': const TimestampConverter().toJson(instance.createdAt),
+      'id': instance.id,
       'task': instance.task,
       'likes': instance.likes,
       'comments': instance.comments,

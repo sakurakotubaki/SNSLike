@@ -14,16 +14,44 @@ FirebaseFirestore firebaseFirestore(FirebaseFirestoreRef ref) {
 Stream<List<User>> userStream(UserStreamRef ref) {
   final firestore = ref.watch(firebaseFirestoreProvider);
   return firestore
-      .collection('user').limit(5)
+      .collection('user')
+      .orderBy('createdAt', descending: true)
+      .withConverter<User?>(fromFirestore: (ds, _) {
+        final data = ds.data();
+        final id = ds.id;
+
+        if (data == null) {
+          return null;
+        }
+        data['id'] = id;
+        return User.fromJson(data);
+      }, toFirestore: (user, _) {
+        return user?.toJson() ?? {};
+      })
       .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => User.fromJson(doc.data())).toList());
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => doc.data()).whereType<User>().toList());
 }
 
 @riverpod
 Stream<List<Task>> taskStream(TaskStreamRef ref) {
   final firestore = ref.watch(firebaseFirestoreProvider);
   return firestore
-      .collection('task').limit(5)
+      .collection('task')
+      .orderBy('createdAt', descending: true)
+      .withConverter<Task?>(fromFirestore: (ds, _) {
+        final data = ds.data();
+        final id = ds.id;
+
+        if (data == null) {
+          return null;
+        }
+        data['id'] = id;
+        return Task.fromJson(data);
+      }, toFirestore: (user, _) {
+        return user?.toJson() ?? {};
+      })
       .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => Task.fromJson(doc.data())).toList());
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => doc.data()).whereType<Task>().toList());
 }

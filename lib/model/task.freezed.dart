@@ -20,6 +20,9 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Task {
+  @TimestampConverter()
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   String get task => throw _privateConstructorUsedError;
   List<String> get likes => throw _privateConstructorUsedError;
   List<String> get comments => throw _privateConstructorUsedError;
@@ -34,7 +37,12 @@ abstract class $TaskCopyWith<$Res> {
   factory $TaskCopyWith(Task value, $Res Function(Task) then) =
       _$TaskCopyWithImpl<$Res, Task>;
   @useResult
-  $Res call({String task, List<String> likes, List<String> comments});
+  $Res call(
+      {@TimestampConverter() DateTime? createdAt,
+      String id,
+      String task,
+      List<String> likes,
+      List<String> comments});
 }
 
 /// @nodoc
@@ -50,11 +58,21 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? createdAt = freezed,
+    Object? id = null,
     Object? task = null,
     Object? likes = null,
     Object? comments = null,
   }) {
     return _then(_value.copyWith(
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       task: null == task
           ? _value.task
           : task // ignore: cast_nullable_to_non_nullable
@@ -78,7 +96,12 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
       __$$TaskImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String task, List<String> likes, List<String> comments});
+  $Res call(
+      {@TimestampConverter() DateTime? createdAt,
+      String id,
+      String task,
+      List<String> likes,
+      List<String> comments});
 }
 
 /// @nodoc
@@ -91,11 +114,21 @@ class __$$TaskImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? createdAt = freezed,
+    Object? id = null,
     Object? task = null,
     Object? likes = null,
     Object? comments = null,
   }) {
     return _then(_$TaskImpl(
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       task: null == task
           ? _value.task
           : task // ignore: cast_nullable_to_non_nullable
@@ -116,7 +149,9 @@ class __$$TaskImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   const _$TaskImpl(
-      {this.task = '',
+      {@TimestampConverter() this.createdAt,
+      this.id = '',
+      this.task = '',
       final List<String> likes = const [],
       final List<String> comments = const []})
       : _likes = likes,
@@ -125,6 +160,12 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   factory _$TaskImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskImplFromJson(json);
 
+  @override
+  @TimestampConverter()
+  final DateTime? createdAt;
+  @override
+  @JsonKey()
+  final String id;
   @override
   @JsonKey()
   final String task;
@@ -148,7 +189,7 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Task(task: $task, likes: $likes, comments: $comments)';
+    return 'Task(createdAt: $createdAt, id: $id, task: $task, likes: $likes, comments: $comments)';
   }
 
   @override
@@ -156,6 +197,8 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'Task'))
+      ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('task', task))
       ..add(DiagnosticsProperty('likes', likes))
       ..add(DiagnosticsProperty('comments', comments));
@@ -166,6 +209,9 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TaskImpl &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.task, task) || other.task == task) &&
             const DeepCollectionEquality().equals(other._likes, _likes) &&
             const DeepCollectionEquality().equals(other._comments, _comments));
@@ -175,6 +221,8 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      createdAt,
+      id,
       task,
       const DeepCollectionEquality().hash(_likes),
       const DeepCollectionEquality().hash(_comments));
@@ -195,12 +243,19 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
 
 abstract class _Task implements Task {
   const factory _Task(
-      {final String task,
+      {@TimestampConverter() final DateTime? createdAt,
+      final String id,
+      final String task,
       final List<String> likes,
       final List<String> comments}) = _$TaskImpl;
 
   factory _Task.fromJson(Map<String, dynamic> json) = _$TaskImpl.fromJson;
 
+  @override
+  @TimestampConverter()
+  DateTime? get createdAt;
+  @override
+  String get id;
   @override
   String get task;
   @override

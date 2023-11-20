@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:task_app/provider/firebase_provider.dart';
 
 import 'firebase_options.dart';
@@ -12,6 +14,8 @@ Future<void> main() async {
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
   );
+
+  await initializeDateFormatting('ja_JP', null);
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -33,7 +37,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,45 +47,55 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Task App'),
       ),
-      // Cardの中にuserのnameとtaskのtask,likes, commentsを表示する。ユーザー名を表示して、その下にtaskの情報を表示する。全てCardの中に表示する。
       body: users.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(child: Text(error.toString())),
         data: (users) => tasks.when(
-          data: (tasks) => ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              final user = users[index];
-              final task = tasks[index];
-              return SizedBox(
-                width: 200,
-                height: 150,
-                child: Card(
-                  child: Column(
-                    children: [
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(user.name)),
-                      const SizedBox(height: 10),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(task.task)),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text('いいね ${task.likes.length.toString()}'),
-                          Text('コメント ${task.comments.length.toString()}'),
-                        ],
-                      ),
-                    ],
+          data: (tasks) {
+            // 全てのタスクを一つのリストにまとめる
+            final allTasks = tasks.toList();
+            // タスクを作成日が新しい順に並び替える
+            allTasks.sort((a, b) => (b.createdAt ?? DateTime.now())
+                .compareTo(a.createdAt ?? DateTime.now()));
+            return ListView.builder(
+              itemCount: allTasks.length,
+              itemBuilder: (context, index) {
+                final task = allTasks[index];
+                final user = users.firstWhere((user) => user.id == task.id);
+                return SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Text('タスクID: ${task.id}'),
+                        Text('ユーザーID: ${user.id}'),
+                        Text(
+                            'task作成日: ${DateFormat('yyyy年MM月dd日HH時mm分', 'ja_JP').format(task.createdAt?.toLocal() ?? DateTime.now())}'),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(user.name)),
+                        const SizedBox(height: 10),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(task.task)),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Text('いいね ${task.likes.length.toString()}'),
+                            Text('コメント ${task.comments.length.toString()}'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            );
+          },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) => Center(child: Text(error.toString())),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(child: Text(error.toString())),
       ),
     );
   }
